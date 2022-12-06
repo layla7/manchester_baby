@@ -9,7 +9,7 @@
  * 
  * Set the Control Instruction to the contents of the Store Line
 */
-void jmp(Control *control, Store *store);
+void jmp(Control *control, Store *store, int storeline);
 
 /**
  * @param CI pointer to the contents of the control instruction
@@ -17,7 +17,7 @@ void jmp(Control *control, Store *store);
  * 
  * Add the content of the store line to the control instruction
 */
-void jrp(Control *control, Store *store);
+void jrp(Control *control, Store *store, int storeline);
 
 /**
  * @param accumulator pointer to the contents of the accumulator
@@ -25,7 +25,7 @@ void jrp(Control *control, Store *store);
  * 
  * Load accumulator to negative form of store content
 */
-void ldn(Accumulator *accumulator, Store *store);
+void ldn(Accumulator *accumulator, Store *store, int storeline);
 
 /**
  * @param accumulator the contents of the accumulator
@@ -33,7 +33,7 @@ void ldn(Accumulator *accumulator, Store *store);
  * 
  * Copy contents of the accumulator to the store location
 */
-void sto(Accumulator *accumulator, Store *store);
+void sto(Accumulator *accumulator, Store *store, int storeline);
 
 /**
  * @param accumulator pointer to the contents of the accumulato
@@ -41,7 +41,7 @@ void sto(Accumulator *accumulator, Store *store);
  * 
  * Subtract content of the store location from accumulator
 */
-void sub(Accumulator *accumulator, Store *store);
+void sub(Accumulator *accumulator, Store *store, int storeline);
 
 /**
  * @param accumulator pointer to the contents of the accumulato
