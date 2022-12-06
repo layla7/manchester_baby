@@ -5,35 +5,35 @@
 
 /**
  * @param CI pointer to the contents of the control instruction
- * @param storeline pointer to the store location line
+ * @param storeline the store location line
  * 
  * Set the Control Instruction to the contents of the Store Line
 */
-void jmp(line *CI, line *storeline);
+void jmp(Control *control, Store *store);
 
 /**
  * @param CI pointer to the contents of the control instruction
- * @param storeline pointer to the store location line
+ * @param storeline the store location line
  * 
  * Add the content of the store line to the control instruction
 */
-void jrp(line *CI, line *storeline);
+void jrp(Control *control, Store *store);
 
 /**
  * @param accumulator pointer to the contents of the accumulator
- * @param storeline pointer to the store location line
+ * @param storeline the store location line
  * 
  * Load accumulator to negative form of store content
 */
-void ldn(line *accumulator, line *storeline);
+void ldn(Accumulator *accumulator, Store *store);
 
 /**
- * @param accumulator pointer to the contents of the accumulato
+ * @param accumulator the contents of the accumulator
  * @param storeline pointer to the store location line
  * 
  * Copy contents of the accumulator to the store location
 */
-void sto(line *accumulator, line *storeline);
+void sto(Accumulator *accumulator, Store *store);
 
 /**
  * @param accumulator pointer to the contents of the accumulato
@@ -41,7 +41,7 @@ void sto(line *accumulator, line *storeline);
  * 
  * Subtract content of the store location from accumulator
 */
-void sub(line *accumulator, line *storeline);
+void sub(Accumulator *accumulator, Store *store);
 
 /**
  * @param accumulator pointer to the contents of the accumulato
@@ -49,7 +49,7 @@ void sub(line *accumulator, line *storeline);
  * 
  * Increment CI if Accumulator value negative otherwise do nothing
 */
-void comp(line *CI, line *accumulator);
+void comp(Control *control, Accumulator *accumulator);
 
 /**
  * halt machine
