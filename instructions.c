@@ -14,24 +14,35 @@ void jmp(Control *control, Store *store, int storeline){
 void jrp(Control *control, Store *store, int storeline){
     bool carry = false;
     char total[BITS]; 
-    for (int i = 0; i < BITS - 1; i++){
-        if (control -> CInstruction[i] == '1' && store -> lines[storeline][i] == '1'){
-            carry = true;
-            total[i] = '0';
-        }
-        else if((control -> CInstruction[i] == '1' && store -> lines[storeline][i] == '0') || (control -> CInstruction[i] == '0' && store -> lines[storeline][i] == '1')){
+    for (int i = 0; i < BITS; i++){
             if (carry == true){
-                total[i] = '0';
+                if(control->CInstruction[i] == '1' && store->lines[storeline][i] == '1'){
+                    carry=true;
+                    total[i] = '0';
+                }
+                else if(control->CInstruction[i] == '1' || total[i] == '1'){
+                    carry = true;
+                    total[i] = '0';
+                }
+                else{
+                    total[i] = '1';
+                    carry = false;
+                }
             }
             else{
-                total[i] = '1';
+                if(control -> CInstruction[i] == '1' && store->lines[storeline][i] == '1'){
+                    carry = true;
+                    total[i] = '0';
+                }
+                else if(control -> CInstruction[i] == '0' && store->lines[storeline][i] == '0'){
+                    carry = false;
+                    total[i] = '0';
+                }
+                else{
+                    total[i] = '1';
+                }
             }
-        }
-        else{
-            total[i] = '0';
-            carry = false;
-        }
-        if((i == BITS - 1) && carry == true) printf("Binary addition out of range");
+            //if((i == BITS - 1) && carry == true) printf("Binary addition out of range");
     }
 
     for(int i = 0; i < BITS; i++){
@@ -40,7 +51,7 @@ void jrp(Control *control, Store *store, int storeline){
 }
 
 void ldn(Accumulator *accumulator, Store *store, int storeline){
-    for (int i = 0; i < BITS - 1; i++){
+    for (int i = 0; i < BITS-1; i++){
         accumulator -> ARegister[i] = store -> lines[storeline][i];
     }
 
@@ -60,21 +71,32 @@ void sub(Accumulator *accumulator, Store *store, int storeline){
     bool carry = false;
     char total[BITS]; 
     for (int i = 0; i < BITS - 1; i++){
-        if (accumulator -> ARegister[i] == '1' && store -> lines[storeline][i] == '1'){
-            carry = true;
-            total[i] = '0';
-        }
-        else if((accumulator -> ARegister[i] == '1' && store -> lines[storeline][i] == '0') || (accumulator -> ARegister[i] == '0' && store -> lines[storeline][i] == '1')){
-            if (carry == true){
+        if (carry == true){
+                if(accumulator->ARegister[i] == '1' && store->lines[storeline][i] == '1'){
+                    carry=true;
+                    total[i] = '0';
+                }
+                else if(accumulator->ARegister[i] == '1' || store->lines[storeline][i] == '1'){
+                    carry = true;
+                    total[i] = '0';
+                }
+                else{
+                    total[i] = '1';
+                    carry = false;
+                }
+            }
+        else{
+            if(accumulator->ARegister[i] == '1' && store->lines[storeline][i] == '1'){
+                carry = true;
+                total[i] = '0';
+            }
+            else if(accumulator->ARegister[i] == '0' && store->lines[storeline][i] == '0'){
+                carry = false;
                 total[i] = '0';
             }
             else{
                 total[i] = '1';
             }
-        }
-        else{
-            total[i] = '0';
-            carry = false;
         }
         if((i == BITS - 1) && carry == true) printf("Binary addition out of range");
     }

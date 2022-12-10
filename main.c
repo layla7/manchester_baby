@@ -5,7 +5,6 @@
 #include <stdlib.h>
 
 int main(){
-    printf("yay");
     Store* store = (Store*)malloc(sizeof(Store));
     Accumulator* accumulator = (Accumulator*)malloc(sizeof(Accumulator));
     Control* control = (Control*)malloc(sizeof(Control));
@@ -14,6 +13,6 @@ int main(){
         incrementCI(control);
         fetch(store, control);
         decodex(control, accumulator, store);
-        //display(store);
+        display(store, accumulator, control);
     }
 }

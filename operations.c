@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
+
 void startup(Store *store, Accumulator *accumulator, Control *control){
     for(int i = 0; i<STORE_SIZE; i++){
         for (int j = 0; j < BITS; j++)
@@ -14,9 +15,9 @@ void startup(Store *store, Accumulator *accumulator, Control *control){
 
     for (int j = 0; j < BITS; j++)
     {
-        accumulator->ARegister[j] = '0';
-        control->CInstruction[j] = '0';
-        control->PInstruction[j] = '0';
+        //accumulator->ARegister[j] = '0';
+        //control->CInstruction[j] = '0';
+        //control->PInstruction[j] = '0';
     }
 
     fileread(store);
@@ -65,24 +66,39 @@ void incrementCI(Control *control){
     char total[BITS];
 
     for (int i = 0; i < BITS; i++){
-            if ((control -> CInstruction[i] == '1' && add1[i] == '1') || (control->CInstruction[i] && carry == true) || (add1[i] && carry == true)){
-                carry = true;
-                control -> CInstruction[i] = '0';
-            }
-            else if(control -> CInstruction[i] == '0' && add1[i] == '0' && carry == false){
-                control -> CInstruction[i] = '0';
-                carry = false;
+            if (carry == true){
+                if(control->CInstruction[i] == '1' && add1[i] == '1'){
+                    carry=true;
+                    total[i] = '0';
                 }
-            else if((control -> CInstruction[i] == '1' && add1[i] == '0' && carry == false) || (control -> CInstruction[i] == '0' && add1[i] == '1' && carry == false) || (control -> CInstruction[i] == '0' && add1[i] == '0' && carry == true)){
-                control -> CInstruction[i]= '1';
-                carry = false;
+                else if(control->CInstruction[i] == '1' || add1[i] == '1'){
+                    carry = true;
+                    total[i] = '0';
+                }
+                else{
+                    total[i] = '1';
+                    carry = false;
+                }
             }
-            if((i == BITS - 1) && carry == true) printf("Binary addition out of range");
+            else{
+                if(control -> CInstruction[i] == '1' && add1[i] == '1'){
+                    carry = true;
+                    total[i] = '0';
+                }
+                else if(control -> CInstruction[i] == '0' && add1[i] == '0'){
+                    carry = false;
+                    total[i] = '0';
+                }
+                else{
+                    total[i] = '1';
+                }
+            }
+            //if((i == BITS - 1) && carry == true) printf("Binary addition out of range");
     }
 
     for(int i = 0; i < BITS; i++){
-        //control -> CInstruction[i] = total[i];
-        printf("%c",control->CInstruction[i]);
+        control -> CInstruction[i] = total[i];
+        //printf("%c",control->CInstruction[i]);
     }
     printf("\n");
 }
@@ -154,11 +170,11 @@ void decodex(Control *control, Accumulator *accumulator, Store *store){
     }
 }
 
-void display(Store* store){
+void display(Store* store, Accumulator* accumulator, Control* control){
+    
+    
     for(int i = 0; i < STORE_SIZE; i++){
-        printf("\n");
-        for(int j = 0; j < BITS; j++){
-            printf("%c", store->lines[i][j]);
-        }
+        printf("%c", accumulator->ARegister[i]);
     }
+    printf("\n");
 }
