@@ -31,7 +31,7 @@ void fileread(Store *store){
     int storeline = 0;
     int i = 0;
 
-    if(fp == NULL){
+    if(!fp){
         printf("Failure opening file, returning to menu...");
         exit(0);
         //call to menu here
