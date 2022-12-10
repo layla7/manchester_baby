@@ -8,27 +8,14 @@
 
 // Data structure to store 2D array for symbol table
 typedef struct symbolTable{
-    char symbols[SYMBOL_TABLE_SIZE][2];
+    char symbols[SYMBOL_TABLE_SIZE][30];
+    int address[SYMBOL_TABLE_SIZE];
 } SymbolTable;
 
 
 typedef struct outputBuffer{
-	char buffer[BUFFER_SIZE];
+	char buffer[BUFFER_SIZE][32];
 } Buffer;
-
-// Data structure to store 
-typedef struct instructionSet{
-	char instructions[8][2]; 
-} InstructionSet;
-
-/*char instructons[2][8] = { "000",  "JMP",
-					"100",	"LRP",
-					"010", 	"LDN",
-					"110",	"STO",
-					"001",	"SUB",
-					"101",	"SUB",
-					"011",	"CMP",
-					"111",	"STP"};*/
 
 void assemble();
 bool firstPass(Buffer *buffer, SymbolTable *SymbolTable, const char *filename);

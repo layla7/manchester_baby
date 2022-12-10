@@ -19,10 +19,63 @@ bool getAssemblyFile(char filename[]){
 	}   
 }
 
+void displaySymbolTable(SymbolTable *table){
+	for(int i=0;i<SYMBOL_TABLE_SIZE;i++){
+		if(strcmp(table->symbols[i], "")==0){
+			printf("end of symbol table.\n");
+			break;
+		} else {
+			printf("%s at address %d\n", table->symbols[i], table->address[i]);
+		}
+	}
+}
+
+void displaybuffer(Buffer *buffer){
+	int consecutiveBlanks = 0;
+	for(int i=0;i<BUFFER_SIZE;i++){
+		printf("%s\n", buffer->buffer[i]);
+		/*if(strcmp(buffer->buffer[i], "")==0){
+			consecutiveBlanks++;
+			if(consecutiveBlanks==3){
+				printf("end of output buffer.\n");
+				break;
+			}
+		} else {
+			consecutiveBlanks=0;
+			printf("%s\n", buffer->buffer[i]);
+		}*/
+	}
+}
+
+void decToBin(char token[], char binary[]){
+    int num = atoi(token);
+    int toAdd;
+    int i =0;
+    //translate to big-endian binary
+    while (num>0){
+    	toAdd=num%2;
+    	if(toAdd){
+    		binary[i]='1';
+    	} else {
+    		binary[i]='0';
+    	}
+    	num=num/2;
+    	i++;
+    }
+
+    //fill remaining spaces
+    for(int j=(strlen(binary));j<13;j++){
+    	binary[j]='0';
+    }
+}
+
 // Carries out the first pass in the analysis phase of the assembler
-/*bool firstPass(Buffer *buffer, SymbolTable *SymbolTable, const char *filename){
+bool firstPass(Buffer *buffer, SymbolTable *table, const char *filename){
 	// Open file to read
-	FILE *fp = fopen("output.txt", "r");
+	FILE *fp = fopen(filename, "r");
+	// Define instruction set (I was running out of time :/)
+	char instructionBin[8][4]={"000","100","010","110","001","101","011","111"};
+	char instructionName[8][4]={"JMP","LRP","LDN","STO","SUB","SUB","CMP","STP"};
 	// Check file opened correctly
 	if (fp!=NULL){
 		// define instruction set
@@ -30,33 +83,79 @@ bool getAssemblyFile(char filename[]){
         char line[128];
         int currentAddress = 0;
         // Loop through file indicated by filename
-        for(int i=0;fgets(line, 128, fp) != NULL;i++){
-        	if(line[0]=";"){
-        		// Skips iteration if the line is just a comment
-        		continue;
-        	}
-        	char * token = strtok(string, " "); // get first token
+        while(fgets(line, 128, fp)){
+        	//if(line[0]==';') currentAddress--; // re-adjust address count if entire line is a comment
+        	char * token = strtok(line, " "); // get first token
         	while(token!=NULL){ // loop to get all tokens
-        		printf(" %s\n", token) // print token
-        		token = strtok(NULL," ");
+        		if(token[0]==';'){
+        			// Skips the rest of a line upon hitting a comment
+	        		break;
+        		} else if (token[strlen(token)-1]==':'){ // check if token is a label
+        			//printf("Label identified\n");
+        			for(int i=0;i<32;i++){ // Loop through symboltable
+        				if(strcmp(table->symbols[i], token)==0){ // check if label is in current symbol table spot
+        					printf("label found in SymbolTable\n");
+        					table->address[i]=currentAddress;
+        					break;
+        				} else if (strcmp(table->symbols[i], "")==0){
+        					// Add symbol with address if found to not be presesnt.
+        					printf("label not found in SymbolTable\n");
+        					strcpy(table->symbols[i], token);
+        					table->address[i]=currentAddress;
+        					break;
+        				}
+        			}
+        		} else if (strcmp(token, "VAR")==0){ // check if token is a command to store a variable
+        			token = strtok(NULL, " "); // Get next token in order to get variable value
+        			//NOTE: could add check to ensure there is a value?
+        			char binary[14]={"\0"};
+        			decToBin(token, binary);
+        			printf("binary = %s\n", binary);
+        			strcpy(buffer->buffer[currentAddress], binary);
+        			currentAddress++;
+        		} else {
+        			for(int j=0;j<8;j++){ // loop through instruction set
+        				if(strcmp(token, instructionName[j])==0){
+        					printf(" - %s", instructionBin[j]);
+        					strcpy(buffer->buffer[currentAddress], instructionBin[j]);
+        					currentAddress++;
+        					if(strcmp(token, "STP")==1){ //if not the stop command
+        						token = strtok(NULL, " ");
+        						// Look for lable in symbol table
+	        					for(int i=0;i<32;i++){ // Loop through symboltable
+			        				if(strcmp(table->symbols[i], token)==0){ // check if label is in current symbol table spot
+			        					printf("label found in SymbolTable\n");
+			        					if(SymbolTable->address[i]!=NULL){ // check variable is assigned
+			        						
+			        					}
+			        				}
+	        					}
+        					}
+        				}
+        			}
+        		}
+        		printf(" %s\n", token); // print token
+        		token = strtok(NULL, " ");
         	}
+
         	//EXTENSION check syntax of line & instructions are valid
         	//convert commands & numbers to machine code and send them to output buffer
         	//if unrecognized variable, leave 2 lines blank in output buffer
 			//store any variables in symbol table
-			currentAddress++;
-		return true;
         }
-    }	
-}*/
+    displaySymbolTable(table);
+    displaybuffer(buffer);
+    return true;
+    }
+}
 
 // Carries out the second pass in the analysis phase of the assembler
-/*bool secondPass(Buffer *buffer, SymbolTable *SymbolTable, char[] filename){
+/*bool secondPass(Buffer *buffer, SymbolTable *SymbolTable, char *filename){
 	//loop through file indicated by filename 
 		//check if previously unknown variable is now known
 		//if so fill in gap in input buffer
 		//else return false & print error message about reference to undeclaired variable
-		//return true
+		return true;
 }*/
 
 // Carries out the synthesis phase of the assembler and writes the output a file.
@@ -65,13 +164,15 @@ bool getAssemblyFile(char filename[]){
 	FILE *fp = fopen("output.txt", "w");
 	// Loop through input buffer until the end or next line is blank
 	for(int i=0;i<BUFFER_SIZE;i++){
-		//line = (synthesise line);
+		char line[32]; //= (synthesise line);
 		if(fp!=NULL){
-	        writeRow(fp, line);
+	        //writeRow(fp, line);
 	    }
 	}
 	fclose(fp);
 }*/
+
+
 
 // Carries out the assemly process
 void assemble(){
@@ -83,9 +184,9 @@ void assemble(){
 		Buffer *buffer = NULL;
 		table = (SymbolTable*)malloc(sizeof(SymbolTable));
 		buffer = (Buffer*)malloc(sizeof(Buffer));
-		if(!(table==NULL || buffer==NULL)){
+		if(!(table==NULL && buffer==NULL)){
 			// Checks that no errors occurend during memory allocation
-			firstPass(*buffer, *SymbolTable, filename);
+			firstPass(buffer, table, filename);
 			//secondPass(*buffer, *SymbolTable, filename);
         	//writeToFile(*buffer);
     	} else {
