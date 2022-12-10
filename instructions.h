@@ -1,3 +1,11 @@
+/**
+ * Lowrie Mouat
+ * Matthew Gibson
+ * Rachel Duncan
+ * Robert Kelly
+ * Tim Baxter
+ * Zihan Tang
+*/
 #ifndef __INSTRUCTIONS_HEADER__
 #define __INSTRUCTIONS_HEADER__
 

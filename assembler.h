@@ -1,3 +1,11 @@
+/**
+ * Lowrie Mouat
+ * Matthew Gibson
+ * Rachel Duncan
+ * Robert Kelly
+ * Tim Baxter
+ * Zihan Tang
+*/
 #ifndef __ASSEMBLER_HEADER__
 #define __ASSEMBLER_HEADER__
 

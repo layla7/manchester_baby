@@ -1,3 +1,11 @@
+/**
+ * Lowrie Mouat
+ * Matthew Gibson
+ * Rachel Duncan
+ * Robert Kelly
+ * Tim Baxter
+ * Zihan Tang
+*/
 #ifndef __OPERATIONS_HEADER__
 #define __OPERATIONS_HEADER__
 #include <stdio.h>

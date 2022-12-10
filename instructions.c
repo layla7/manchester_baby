@@ -1,3 +1,11 @@
+/**
+ * Lowrie Mouat
+ * Matthew Gibson
+ * Rachel Duncan
+ * Robert Kelly
+ * Tim Baxter
+ * Zihan Tang
+*/
 #include "components.h"
 #include "instructions.h"
 #include "operations.h"

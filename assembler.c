@@ -1,3 +1,11 @@
+/**
+ * Lowrie Mouat
+ * Matthew Gibson
+ * Rachel Duncan
+ * Robert Kelly
+ * Tim Baxter
+ * Zihan Tang
+*/
 #include <stdio.h>  // required for access to file input-output functions in C
 #include <stdlib.h> // required for access to memory allocation functions
 #include <string.h> // required for validation on filename entry
